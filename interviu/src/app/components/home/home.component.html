@@ -1,0 +1,18 @@
+<div *ngIf="user" class="home-container">
+  <div class="card">
+    <h2>Welcome, {{ user.fullName }}</h2>
+
+    <ul>
+      <li><strong>Email:</strong> {{ user.email }}</li>
+      <li><strong>Role:</strong> {{ user.role }}</li>
+      <li><strong>Status:</strong> 
+        <span [class.active]="user.status === 'Active'" 
+              [class.inactive]="user.status === 'Inactive'">
+          {{ user.status }}
+        </span>
+      </li>
+    </ul>
+
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+</div>

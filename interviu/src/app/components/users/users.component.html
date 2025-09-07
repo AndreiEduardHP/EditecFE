@@ -1,0 +1,112 @@
+<div class="users-container">
+  <div class="header">
+    <h2>Manage Users</h2>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+
+  <button class="add-btn" (click)="addUser()">+ Add User</button>
+
+  <table class="users-table" *ngIf="users.length > 0">
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th class="actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of users">
+        <td>{{ u.fullName }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.role }}</td>
+        <td>
+          <span [class.active]="u.status === 'Active'" 
+                [class.inactive]="u.status === 'Inactive'">
+            {{ u.status }}
+          </span>
+        </td>
+        <td class="actions">
+          <button class="edit-btn" (click)="editUser(u)">Edit</button>
+          <button class="delete-btn" (click)="deleteUser(u)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!users.length" class="empty">No users found.</p>
+
+<div *ngIf="isFormVisible" class="edit-form">
+    <h3>{{ isNew ? '+ Add User' : ' Edit User' }}</h3>
+
+    <form [formGroup]="form" (ngSubmit)="saveUser()">
+      <label>Full Name</label>
+      <input formControlName="fullName" type="text" />
+      <div *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched" class="error">
+        Name is required (2-100 chars).
+      </div>
+
+      <label>Email</label>
+      <input formControlName="email" type="email" />
+      <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error">
+        Enter a valid email.
+      </div>
+
+      <label>Password</label>
+      <div class="password-field">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="{{ isNew ? 'Enter password' : 'Leave blank to keep current' }}"
+        />
+        <button type="button" class="toggle-btn" (click)="togglePasswordVisibility()">
+          {{ showPassword ? 'Hide' : 'Show' }}
+        </button>
+      </div>
+
+      <label>Role</label>
+      <select formControlName="role">
+        <option value="Admin">Admin</option>
+        <option value="User">User</option>
+      </select>
+
+      <label>Status</label>
+      <select formControlName="status">
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+
+      <div class="form-actions">
+        <button type="submit" class="save-btn" [disabled]="form.invalid">Save</button>
+        <button type="button" class="cancel-btn" (click)="form.reset()">Cancel</button>
+      </div>
+      <div *ngIf="form.get('fullName')?.touched && form.get('fullName')?.invalid" class="error">
+  <span *ngIf="form.get('fullName')?.errors?.['required']">
+    Full Name is required.
+  </span>
+  <span *ngIf="form.get('fullName')?.errors?.['minlength']">
+    Minimum 2 characters required.
+  </span>
+  <span *ngIf="form.get('fullName')?.errors?.['maxlength']">
+    Maximum 100 characters allowed.
+  </span>
+</div>
+
+<div *ngIf="form.get('email')?.touched && form.get('email')?.invalid" class="error">
+  <span *ngIf="form.get('email')?.errors?.['required']">
+    Email is required.
+  </span>
+  <span *ngIf="form.get('email')?.errors?.['email']">
+    Please enter a valid email.
+  </span>
+</div>
+
+<div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="error">
+  <span *ngIf="form.get('password')?.errors?.['minlength']">
+    Password must be at least 6 characters.
+  </span>
+</div>
+    </form>
+  </div>
+</div>
